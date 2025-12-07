@@ -37,7 +37,9 @@ class SmsForegroundService : Service() {
         private const val TAG = "SmsForegroundService"
         
         // Android 14+ (API 34) 前台服务类型常量
-        // 如果编译环境不支持，使用硬编码值作为后备方案
+        // 对应 ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING
+        // 使用硬编码值(16/0x00000010)以避免编译环境中 SDK 不支持时的符号未定义错误
+        // 参考: https://developer.android.com/reference/android/app/ServiceInfo#FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING
         private const val FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING = 16 // 0x00000010
     }
 
