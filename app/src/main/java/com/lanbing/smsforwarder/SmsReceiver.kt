@@ -10,13 +10,11 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import java.io.IOException
 import java.util.concurrent.Executors
 
 class SmsReceiver : BroadcastReceiver() {
 
     private val client = OkHttpClient()
-    // 使用单线程池处理网络请求
     private val executor = Executors.newSingleThreadExecutor()
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -27,38 +25,35 @@ class SmsReceiver : BroadcastReceiver() {
         if (!isEnabled) return
 
         val webhookUrl = prefs.getString("webhook", "") ?: ""
-        if (webhookUrl.isEmpty() || !webhookUrl.startsWith("http")) return
+        val keywordsStr = prefs.getString("keywords", "") ?: ""
+        
+        if (webhookUrl.isEmpty()) return
 
         val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
         val sb = StringBuilder()
         var sender = ""
-        
         for (sms in messages) {
             sender = sms.displayOriginatingAddress
             sb.append(sms.displayMessageBody)
         }
         val fullMessage = sb.toString()
         
-        // 关键词检查
-        val keywordsStr = prefs.getString("keywords", "") ?: ""
         val keywords = keywordsStr.split(",").map { it.trim() }.filter { it.isNotEmpty() }
-        
-        // 逻辑：如果关键词列表为空 -> 匹配成功(全部转发)
-        // 如果关键词列表不为空 -> 必须包含其中一个
-        val isMatch = if (keywords.isEmpty()) {
-            true 
-        } else {
-            keywords.any { fullMessage.contains(it, ignoreCase = true) }
-        }
+        val isMatch = if (keywords.isEmpty()) true else keywords.any { fullMessage.contains(it, ignoreCase = true) }
 
         if (isMatch) {
-            // Android 广播接收器只有10秒寿命，必须使用 goAsync 延长寿命进行网络请求
             val pendingResult = goAsync()
             executor.execute {
                 try {
                     sendToWecom(webhookUrl, sender, fullMessage)
+                    // 写日志
+                    LogStore.append(context, "转发成功 — 来自: $sender 内容: ${fullMessage.take(200)}")
+                    // 通知前台服务更新展示
+                    context.sendBroadcast(Intent(SmsForegroundService.ACTION_UPDATE))
                 } catch (e: Exception) {
-                    Log.e("SmsForwarder", "Error sending msg", e)
+                    Log.e("SmsForwarder", "Failed to send", e)
+                    LogStore.append(context, "转发失败: ${e.message}")
+                    context.sendBroadcast(Intent(SmsForegroundService.ACTION_UPDATE))
                 } finally {
                     pendingResult.finish()
                 }
@@ -71,7 +66,7 @@ class SmsReceiver : BroadcastReceiver() {
         json.put("msgtype", "text")
         
         val textObj = JSONObject()
-        textObj.put("content", "【收到短信】\n发送人: $sender\n内容: $content")
+        textObj.put("content", "【短信转发】\n来自: $sender\n内容: $content")
         json.put("text", textObj)
 
         val body = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
@@ -81,8 +76,7 @@ class SmsReceiver : BroadcastReceiver() {
             .build()
 
         client.newCall(request).execute().use { response ->
-            // 这里仅仅是触发请求，不处理返回值
-            Log.d("SmsForwarder", "Response: ${response.code}")
+            if (!response.isSuccessful) throw Exception("HTTP ${response.code}")
         }
     }
 }

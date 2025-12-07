@@ -4,12 +4,10 @@
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:label="短信转发助手"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar"
@@ -33,5 +31,9 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".SmsForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice|dataSync|location" />
     </application>
 </manifest>
