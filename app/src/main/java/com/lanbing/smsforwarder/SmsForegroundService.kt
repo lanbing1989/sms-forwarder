@@ -18,6 +18,14 @@ import android.app.PendingIntent
 import android.provider.Settings
 import android.util.Log
 
+/**
+ * 前台服务：负责维持持续通知并在收到广播（如 SmsReceiver/BootReceiver）时更新通知。
+ *
+ * 关键点：
+ * - 在 API>=34（Android 14）上，需要在运行时调用 startForeground 的重载并传入类型位掩码（remoteMessaging）。
+ * - AndroidManifest.xml 中也必须声明 android:foregroundServiceType="remoteMessaging"。
+ * - 在异常情况下尽量记录并优雅停止服务，避免抛异常导致进程崩溃。
+ */
 class SmsForegroundService : Service() {
 
     companion object {
@@ -47,10 +55,15 @@ class SmsForegroundService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        // 先创建通知通道（如果需要）
         createChannel()
         try {
-            registerReceiver(updateReceiver, IntentFilter(ACTION_UPDATE))
-            registerReceiver(updateReceiver, IntentFilter(ACTION_STOP))
+            // 注册用来刷新通知或停止服务的广播
+            val filter = IntentFilter().apply {
+                addAction(ACTION_UPDATE)
+                addAction(ACTION_STOP)
+            }
+            registerReceiver(updateReceiver, filter)
         } catch (t: Throwable) {
             Log.w(TAG, "registerReceiver failed", t)
         }
@@ -65,6 +78,7 @@ class SmsForegroundService : Service() {
                     val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
                     channel.setShowBadge(false)
                     channel.lockscreenVisibility = android.app.Notification.VISIBILITY_PRIVATE
+                    // 可根据需要自定义 sound / vibration / light 等
                     nm.createNotificationChannel(channel)
                 } else {
                     Log.w(TAG, "NotificationManager is null when creating channel")
@@ -76,12 +90,11 @@ class SmsForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // 先构建通知（失败时有回退），然后再 startForeground（包裹异常）
+        // 构建通知，若失败使用最小回退通知保证 startForeground 能拿到 Notification 实例
         val notification: Notification = try {
             buildNotification()
         } catch (t: Throwable) {
             Log.w(TAG, "buildNotification failed, use fallback", t)
-            // 最小回退通知，确保 startForeground 有一个合法通知对象
             val fallbackIcon = resolveSmallIcon()
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("短信转发助手")
@@ -92,21 +105,22 @@ class SmsForegroundService : Service() {
         }
 
         try {
-            // Android 14(API 34) 要求在运行时传入前台服务类型
+            // Android 14+ 要在运行时传入对应类型
             if (Build.VERSION.SDK_INT >= 34) {
                 startForeground(NOTIF_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
             } else {
                 startForeground(NOTIF_ID, notification)
             }
         } catch (t: Throwable) {
-            // 如果 startForeground 抛异常，在某些定制系统上会直接导致应用崩溃，尽量记录并优雅停止服务
+            // 在一些定制 ROM（比如更严格的权限/策略）上 startForeground 可能抛出异常
             Log.w(TAG, "startForeground failed, stopping service", t)
             LogStore.append(applicationContext, "ERROR: startForeground failed: ${t.javaClass.simpleName} ${t.message}")
+            // 优雅退出，避免无限重试或崩溃循环
             stopSelf()
             return START_NOT_STICKY
         }
 
-        // 记录诊断到日志：channel 与权限状态（便于无 adb 情况下调试）
+        // 记录诊断信息供无 adb 环境下调试
         try {
             val nm = getSystemService(NotificationManager::class.java)
             val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) nm?.getNotificationChannel(CHANNEL_ID) else null
@@ -117,26 +131,25 @@ class SmsForegroundService : Service() {
             LogStore.append(applicationContext, "DEBUG: 检查 channel 失败: ${t.message}")
         }
 
-        // 也再次 notify 一遍以兼容某些 ROM（但不要让它成为崩溃点）
+        // 额外再 notify 一次以兼容某些 ROM 的通知行为
         try {
             val nm2 = getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
             nm2?.notify(NOTIF_ID, notification)
         } catch (t: Throwable) {
             Log.w(TAG, "extra notify failed", t)
         }
+
         return START_STICKY
     }
 
     private fun resolveSmallIcon(): Int {
-        // 优先使用你添加的 ic_notification（mipmap 或 drawable）
+        // 优先查找自定义通知图标
         val mipmapId = resources.getIdentifier("ic_notification", "mipmap", packageName)
         if (mipmapId != 0) return mipmapId
         val drawableId = resources.getIdentifier("ic_notification", "drawable", packageName)
         if (drawableId != 0) return drawableId
-        // 回退到应用自带 icon
         val appIcon = applicationInfo.icon
         if (appIcon != 0) return appIcon
-        // 最后回退到系统内置 drawable（避免引用不存在的 R.* 资源导致编译错误）
         return android.R.drawable.ic_dialog_info
     }
 
@@ -155,14 +168,14 @@ class SmsForegroundService : Service() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOnlyAlertOnce(true)
 
-        // 兼容不同 API 的 PendingIntent flags
+        // PendingIntent flags 兼容处理
         val piFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         } else {
             PendingIntent.FLAG_UPDATE_CURRENT
         }
 
-        // 点击通知回到主界面（显式化包名）
+        // 主界面 Intent（显式包名以避免被 ROM 拦截）
         val mainIntent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             `package` = packageName
@@ -170,12 +183,12 @@ class SmsForegroundService : Service() {
         val pendingIntent = PendingIntent.getActivity(this, 0, mainIntent, piFlags)
         builder.setContentIntent(pendingIntent)
 
-        // 停止服务 action（显式化包名）
+        // 停止服务 action（广播）
         val stopIntent = Intent(ACTION_STOP).apply { `package` = packageName }
         val stopPending = PendingIntent.getBroadcast(this, 1, stopIntent, piFlags)
         builder.addAction(android.R.drawable.ic_menu_close_clear_cancel, "停止服务", stopPending)
 
-        // 添加“通知设置” action（跳转到 channel 设置页，Android O+），显式包名，避免某些 ROM 拦截或拒绝隐式 intent
+        // 通知设置（跳转到 channel 设置页或应用设置页）
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
                 putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
@@ -186,7 +199,6 @@ class SmsForegroundService : Service() {
             val pi = PendingIntent.getActivity(this, 2, intent, piFlags)
             builder.addAction(android.R.drawable.ic_menu_manage, "通知设置", pi)
         } else {
-            // 低版本跳转到应用设置页
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                 data = Uri.parse("package:$packageName")
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
