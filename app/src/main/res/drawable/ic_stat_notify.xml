@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- White bell silhouette for notification small icon -->
+    <!-- Bell body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 12,2 C 10.5,2 9,3 9,6 L 9,6.5 C 9,7.5 8.5,8 8,8.5 L 7.5,9 C 7,9.5 7,10 7.5,10.5 L 16.5,10.5 C 17,10 17,9.5 16.5,9 L 16,8.5 C 15.5,8 15,7.5 15,6.5 L 15,6 C 15,3 13.5,2 12,2 Z"/>
+    <!-- Bell top attachment -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 12,2 L 12,1 C 12,0.5 11.5,0 11,0 C 10.5,0 10,0.5 10,1 L 10,2 Z"/>
+    <!-- Bell bottom clapper -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 10.5,10.5 C 10.5,11.5 11,12 12,12 C 13,12 13.5,11.5 13.5,10.5 Z"/>
+    <!-- Notification indicator (small circle) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 17,5 C 17,3.5 18.5,2 20,2 C 21.5,2 23,3.5 23,5 C 23,6.5 21.5,8 20,8 C 18.5,8 17,6.5 17,5 Z"/>
+</vector>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Bell icon with notification waves for SMS forwarding app -->
+    <group
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:translateX="54"
+        android:translateY="54">
+        <!-- Bell body -->
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M 0,-30 C -15,-30 -24,-20 -24,0 L -24,5 C -24,8 -26,10 -28,12 L -30,14 C -32,16 -32,18 -30,20 L 30,20 C 32,18 32,16 30,14 L 28,12 C 26,10 24,8 24,5 L 24,0 C 24,-20 15,-30 0,-30 Z"/>
+        <!-- Bell clapper -->
+        <path
+            android:fillColor="#1976D2"
+            android:pathData="M 0,-30 L 0,-35 C 0,-37 -2,-39 -4,-39 C -6,-39 -8,-37 -8,-35 L -8,-30 Z"/>
+        <!-- Bell bottom curve -->
+        <path
+            android:fillColor="#1976D2"
+            android:pathData="M -8,20 C -8,24 -4,28 0,28 C 4,28 8,24 8,20 Z"/>
+        <!-- Notification wave left -->
+        <path
+            android:fillColor="#FF9800"
+            android:pathData="M -32,-10 C -34,-8 -36,-6 -38,-4 C -40,-2 -42,0 -44,2"
+            android:strokeWidth="2"
+            android:strokeColor="#FF9800"
+            android:fillAlpha="0"
+            android:strokeAlpha="1"/>
+        <!-- Notification wave right -->
+        <path
+            android:fillColor="#FF9800"
+            android:pathData="M 32,-10 C 34,-8 36,-6 38,-4 C 40,-2 42,0 44,2"
+            android:strokeWidth="2"
+            android:strokeColor="#FF9800"
+            android:fillAlpha="0"
+            android:strokeAlpha="1"/>
+    </group>
+</vector>
