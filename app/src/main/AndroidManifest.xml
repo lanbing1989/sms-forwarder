@@ -10,6 +10,9 @@
     <!-- Android 13+ 需要在 Manifest 中声明 POST_NOTIFICATIONS -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- 可选：Android14 对 remote messaging 的前台服务权限（增加以兼容部分定制 ROM 的校验） -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+
     <application
         android:allowBackup="true"
         android:label="短信转发助手"
@@ -43,8 +46,10 @@
             </intent-filter>
         </receiver>
 
+        <!-- 为前台服务在清单中声明类型（Android 14 要求） -->
         <service
             android:name=".SmsForegroundService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="remoteMessaging" />
     </application>
 </manifest>

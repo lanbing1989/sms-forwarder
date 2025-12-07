@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.app.ServiceInfo
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -91,7 +92,12 @@ class SmsForegroundService : Service() {
         }
 
         try {
-            startForeground(NOTIF_ID, notification)
+            // Android 14(API 34) 要求在运行时传入前台服务类型
+            if (Build.VERSION.SDK_INT >= 34) {
+                startForeground(NOTIF_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
+            } else {
+                startForeground(NOTIF_ID, notification)
+            }
         } catch (t: Throwable) {
             // 如果 startForeground 抛异常，在某些定制系统上会直接导致应用崩溃，尽量记录并优雅停止服务
             Log.w(TAG, "startForeground failed, stopping service", t)
