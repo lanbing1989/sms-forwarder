@@ -147,10 +147,10 @@ class SmsForegroundService : Service() {
     }
 
     private fun resolveSmallIcon(): Int {
+        val drawableId = resources.getIdentifier("ic_stat_notify", "drawable", packageName)
+        if (drawableId != 0) return drawableId
         val mipmapId = resources.getIdentifier("ic_notification", "mipmap", packageName)
         if (mipmapId != 0) return mipmapId
-        val drawableId = resources.getIdentifier("ic_notification", "drawable", packageName)
-        if (drawableId != 0) return drawableId
         val appIcon = applicationInfo.icon
         if (appIcon != 0) return appIcon
         return android.R.drawable.ic_dialog_info
