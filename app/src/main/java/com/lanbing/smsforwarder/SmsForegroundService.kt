@@ -122,16 +122,16 @@ class SmsForegroundService : Service() {
     }
 
     private fun resolveSmallIcon(): Int {
-        // 优先使用 mipmap 中的 ic_notification（如果你把图片放在 mipmap 下）
+        // 优先使用你添加的 ic_notification（mipmap 或 drawable）
         val mipmapId = resources.getIdentifier("ic_notification", "mipmap", packageName)
         if (mipmapId != 0) return mipmapId
-        // 如果没放到 mipmap，再尝试 drawable
         val drawableId = resources.getIdentifier("ic_notification", "drawable", packageName)
         if (drawableId != 0) return drawableId
-        // 回退到应用自带 icon 或 launcher icon
+        // 回退到应用自带 icon
         val appIcon = applicationInfo.icon
         if (appIcon != 0) return appIcon
-        return R.mipmap.ic_launcher
+        // 最后回退到系统内置 drawable（避免引用不存在的 R.* 资源导致编译错误）
+        return android.R.drawable.ic_dialog_info
     }
 
     private fun buildNotification(): Notification {
