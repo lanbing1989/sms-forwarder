@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,7 +23,6 @@ import androidx.core.content.ContextCompat
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 请求权限时会弹窗
         setContent {
             SmsForwarderApp()
         }
@@ -40,7 +39,10 @@ fun SmsForwarderApp() {
     var isEnabled by remember { mutableStateOf(prefs.getBoolean("enabled", false)) }
     var logs by remember { mutableStateOf(LogStore.readAll(context)) }
 
-    val requestPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+    // 明确声明回调参数类型为 Boolean，避免编译器无法推断
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted: Boolean ->
         if (granted) Toast.makeText(context, "短信权限已授权", Toast.LENGTH_SHORT).show()
         else Toast.makeText(context, "请授予短信权限以接收短信", Toast.LENGTH_LONG).show()
     }
@@ -50,9 +52,8 @@ fun SmsForwarderApp() {
         prefs.edit().putBoolean("enabled", isEnabled).apply()
         val svcIntent = Intent(context, SmsForegroundService::class.java)
         if (isEnabled) {
-            // 要求系统允许前台服务启动
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermission.launch(Manifest.permission.RECEIVE_SMS)
+                requestPermissionLauncher.launch(Manifest.permission.RECEIVE_SMS)
             }
             ContextCompat.startForegroundService(context, svcIntent)
             Toast.makeText(context, "服务已启动（请在系统中允许自启动与省电策略）", Toast.LENGTH_SHORT).show()
@@ -62,9 +63,7 @@ fun SmsForwarderApp() {
             Toast.makeText(context, "服务已停止", Toast.LENGTH_SHORT).show()
             LogStore.append(context, "服务已停止")
         }
-        // 更新 UI 日志
         logs = LogStore.readAll(context)
-        // 通知前台服务更新通知
         context.sendBroadcast(Intent(SmsForegroundService.ACTION_UPDATE))
     }
 
@@ -111,7 +110,7 @@ fun SmsForwarderApp() {
 
                 Button(onClick = {
                     if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
-                        requestPermission.launch(Manifest.permission.RECEIVE_SMS)
+                        requestPermissionLauncher.launch(Manifest.permission.RECEIVE_SMS)
                     } else {
                         Toast.makeText(context, "权限已存在", Toast.LENGTH_SHORT).show()
                     }
@@ -148,7 +147,6 @@ fun SmsForwarderApp() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(onClick = {
-                // 刷新日志显示
                 logs = LogStore.readAll(context)
             }, modifier = Modifier.fillMaxWidth()) {
                 Text("刷新日志")
