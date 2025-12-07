@@ -82,11 +82,10 @@ class SmsForegroundService : Service() {
             buildNotification()
         } catch (t: Throwable) {
             Log.w(TAG, "buildNotification failed, use fallback", t)
-            val fallbackIcon = resolveSmallIcon()
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("短信转发助手")
                 .setContentText("服务正在运行")
-                .setSmallIcon(fallbackIcon)
+                .setSmallIcon(R.drawable.ic_stat_notify)
                 .setOngoing(true)
                 .build()
         }
@@ -146,16 +145,6 @@ class SmsForegroundService : Service() {
         }
     }
 
-    private fun resolveSmallIcon(): Int {
-        val mipmapId = resources.getIdentifier("ic_notification", "mipmap", packageName)
-        if (mipmapId != 0) return mipmapId
-        val drawableId = resources.getIdentifier("ic_notification", "drawable", packageName)
-        if (drawableId != 0) return drawableId
-        val appIcon = applicationInfo.icon
-        if (appIcon != 0) return appIcon
-        return android.R.drawable.ic_dialog_info
-    }
-
     private fun buildNotification(): Notification {
         val prefs = getSharedPreferences("app_config", Context.MODE_PRIVATE)
         val enabled = prefs.getBoolean("enabled", false)
@@ -165,7 +154,7 @@ class SmsForegroundService : Service() {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("短信转发助手 - $status")
             .setContentText(latest)
-            .setSmallIcon(resolveSmallIcon())
+            .setSmallIcon(R.drawable.ic_stat_notify)
             .setOngoing(true)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

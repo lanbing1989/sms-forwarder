@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Larger notification icon with color for notification drawer -->
+    <!-- Background circle -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M24,24m-22,0a22,22 0,1 1,44 0a22,22 0,1 1,-44 0"/>
+    <!-- Message/SMS icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,10H12C10.34,10 9,11.34 9,13v18c0,1.66 1.34,3 3,3h21l6,6V13C39,11.34 37.66,10 36,10zM36,33.25L33.75,31H12V13h24V33.25z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16,19h16v2.5h-16z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16,24h16v2.5h-16z"/>
+</vector>
