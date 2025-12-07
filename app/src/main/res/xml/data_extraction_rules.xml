@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 占位文件：保留为空即可，满足 manifest 引用 -->
+</data-extraction-rules>
