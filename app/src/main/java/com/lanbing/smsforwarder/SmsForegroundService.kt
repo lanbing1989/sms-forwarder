@@ -4,7 +4,6 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-// 注意：未导入 ServiceInfo，下面使用全限定名 android.app.ServiceInfo
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -93,9 +92,16 @@ class SmsForegroundService : Service() {
         }
 
         try {
-            // 使用全限定名，避免因缺少 import 导致的编译问题
             if (Build.VERSION.SDK_INT >= 34) {
-                startForeground(NOTIF_ID, notification, android.app.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
+                // 运行时通过反射读取常量，避免编译期依赖导致的 Unresolved reference
+                val type = getRemoteMessagingForegroundServiceType()
+                if (type != 0) {
+                    startForeground(NOTIF_ID, notification, type)
+                } else {
+                    // 若反射失败，则仍尝试调用不带 type 的重载（有些设备兼容）；并记录以便调试
+                    Log.w(TAG, "FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING not found via reflection, calling startForeground without type")
+                    startForeground(NOTIF_ID, notification)
+                }
             } else {
                 startForeground(NOTIF_ID, notification)
             }
@@ -123,6 +129,21 @@ class SmsForegroundService : Service() {
             Log.w(TAG, "extra notify failed", t)
         }
         return START_STICKY
+    }
+
+    /**
+     * 通过反射获取 android.app.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING 的值（如果存在）
+     * 若反射失败或常量不存在，返回 0（表示未找到）
+     */
+    private fun getRemoteMessagingForegroundServiceType(): Int {
+        return try {
+            val cls = Class.forName("android.app.ServiceInfo")
+            val field = cls.getField("FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING")
+            (field.getInt(null))
+        } catch (t: Throwable) {
+            Log.w(TAG, "Failed to read FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING via reflection: ${t.message}")
+            0
+        }
     }
 
     private fun resolveSmallIcon(): Int {
