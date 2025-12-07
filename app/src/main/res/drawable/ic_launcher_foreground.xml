@@ -24,19 +24,13 @@
             android:pathData="M -8,20 C -8,24 -4,28 0,28 C 4,28 8,24 8,20 Z"/>
         <!-- Notification wave left -->
         <path
-            android:fillColor="#FF9800"
             android:pathData="M -32,-10 C -34,-8 -36,-6 -38,-4 C -40,-2 -42,0 -44,2"
             android:strokeWidth="2"
-            android:strokeColor="#FF9800"
-            android:fillAlpha="0"
-            android:strokeAlpha="1"/>
+            android:strokeColor="#FF9800"/>
         <!-- Notification wave right -->
         <path
-            android:fillColor="#FF9800"
             android:pathData="M 32,-10 C 34,-8 36,-6 38,-4 C 40,-2 42,0 44,2"
             android:strokeWidth="2"
-            android:strokeColor="#FF9800"
-            android:fillAlpha="0"
-            android:strokeAlpha="1"/>
+            android:strokeColor="#FF9800"/>
     </group>
 </vector>
