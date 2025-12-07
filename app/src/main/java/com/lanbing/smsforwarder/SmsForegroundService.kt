@@ -3,21 +3,22 @@ package com.lanbing.smsforwarder
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.IBinder
+import android.provider.Settings
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import android.app.PendingIntent
-import android.provider.Settings
-import android.util.Log
 
 class SmsForegroundService : Service() {
 
@@ -29,6 +30,8 @@ class SmsForegroundService : Service() {
         const val ACTION_STOP = "com.lanbing.smsforwarder.ACTION_STOP_SERVICE"
         private const val TAG = "SmsForegroundService"
     }
+
+    private var cachedLargeIcon: Bitmap? = null
 
     private val updateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -164,10 +167,10 @@ class SmsForegroundService : Service() {
 
         // Set large icon for better visibility in notification drawer
         try {
-            val largeIcon = ContextCompat.getDrawable(this, R.drawable.ic_notify_large)?.toBitmap()
-            if (largeIcon != null) {
-                builder.setLargeIcon(largeIcon)
+            if (cachedLargeIcon == null) {
+                cachedLargeIcon = ContextCompat.getDrawable(this, R.drawable.ic_notify_large)?.toBitmap()
             }
+            cachedLargeIcon?.let { builder.setLargeIcon(it) }
         } catch (t: Throwable) {
             Log.w(TAG, "Failed to set large icon", t)
         }
