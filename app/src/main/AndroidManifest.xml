@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <!-- Android 13+ 需要在 Manifest 中声明 POST_NOTIFICATIONS -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:label="短信转发助手"
@@ -33,7 +36,6 @@
 
         <service
             android:name=".SmsForegroundService"
-            android:exported="false"
-            android:foregroundServiceType="connectedDevice|dataSync|location" />
+            android:exported="false" />
     </application>
 </manifest>

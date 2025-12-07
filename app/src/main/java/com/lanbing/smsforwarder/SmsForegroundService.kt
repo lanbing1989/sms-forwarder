@@ -11,6 +11,7 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import android.app.PendingIntent
 
 class SmsForegroundService : Service() {
 
@@ -33,8 +34,7 @@ class SmsForegroundService : Service() {
         super.onCreate()
         createChannel()
         registerReceiver(updateReceiver, IntentFilter(ACTION_UPDATE))
-        // 支持通过 ACTION_STOP 停止服务（可扩展）
-        registerReceiver(updateReceiver, IntentFilter(ACTION_STOP))
+        // 不在这里注册 ACTION_STOP 为避免误触发；如需增加停止按钮可在通知上添加 action
     }
 
     private fun createChannel() {
@@ -47,6 +47,7 @@ class SmsForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // 确保启动为前台服务
         startForeground(NOTIF_ID, buildNotification())
         return START_STICKY
     }
@@ -60,18 +61,19 @@ class SmsForegroundService : Service() {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("短信转发助手 - $status")
             .setContentText(latest)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(android.R.drawable.ic_dialog_info) // 保证系统图标可用
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOnlyAlertOnce(true)
 
-        // 点击通知打开应用的 Intent
-        val pendingIntent = android.app.PendingIntent.getActivity(
+        // 点击通知回到主界面
+        val pendingIntent = PendingIntent.getActivity(
             this, 0,
             Intent(this, MainActivity::class.java).apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP },
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) android.app.PendingIntent.FLAG_IMMUTABLE else 0
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT else PendingIntent.FLAG_UPDATE_CURRENT
         )
         builder.setContentIntent(pendingIntent)
+
         return builder.build()
     }
 
