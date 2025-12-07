@@ -1,4 +1,3 @@
-```markdown
 # 短信转发助手 (SmsForwarder)
 
 轻量、开源的 Android 应用，用于将接收到的短信转发到企业微信/企业微信机器人（Webhook）。设计目标是：小、稳、兼容性好，支持在厂商定制系统（如小米澎湃OS/HyperOS）上长期驻留运行并尽量减少被系统杀死的概率。
@@ -157,8 +156,8 @@
 ---
 
 ## 变更记录（简要）
-- v1.0.0 — 初始实现：短信接收、转发、前台服务、开机自启、日志保存。
-- v1.0.1 — 修复 Android 14+/HyperOS 兼容：在 manifest 声明 foregroundServiceType，并在运行时对 startForeground 做兼容性处理（使用反射读取 ServiceInfo 类型常量，回退逻辑及增强的异常处理）。
+- v0.1 — 初始实现：短信接收、转发、前台服务、开机自启、日志保存。
+- v1.0. — 修复 Android 14+/HyperOS 兼容：在 manifest 声明 foregroundServiceType，并在运行时对 startForeground 做兼容性处理（使用反射读取 ServiceInfo 类型常量，回退逻辑及增强的异常处理）。
 
 （发布时请根据实际提交调整版本号与说明）
 
@@ -179,4 +178,3 @@
 ---
 
 感谢使用 & 贡献！
-``` 
