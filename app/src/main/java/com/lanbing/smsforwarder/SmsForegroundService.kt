@@ -11,7 +11,9 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import android.app.PendingIntent
+import android.util.Log
 
 class SmsForegroundService : Service() {
 
@@ -21,12 +23,16 @@ class SmsForegroundService : Service() {
         const val NOTIF_ID = 1423
         const val ACTION_UPDATE = "com.lanbing.smsforwarder.ACTION_LOG_UPDATED"
         const val ACTION_STOP = "com.lanbing.smsforwarder.ACTION_STOP_SERVICE"
+        private const val TAG = "SmsForegroundService"
     }
 
     private val updateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            // 更新通知内容
-            updateNotification()
+            try {
+                updateNotification()
+            } catch (t: Throwable) {
+                Log.w(TAG, "updateNotification failed", t)
+            }
         }
     }
 
@@ -34,21 +40,34 @@ class SmsForegroundService : Service() {
         super.onCreate()
         createChannel()
         registerReceiver(updateReceiver, IntentFilter(ACTION_UPDATE))
-        // 不在这里注册 ACTION_STOP 为避免误触发；如需增加停止按钮可在通知上添加 action
     }
 
     private fun createChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val nm = getSystemService(NotificationManager::class.java)
-            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW)
-            channel.setShowBadge(false)
-            nm.createNotificationChannel(channel)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val nm = getSystemService(NotificationManager::class.java)
+                // 使用较高优先级，确保在一些 ROM 中不会被默认隐藏
+                val importance = NotificationManager.IMPORTANCE_HIGH
+                val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
+                channel.setShowBadge(false)
+                channel.lockscreenVisibility = android.app.Notification.VISIBILITY_PRIVATE
+                nm.createNotificationChannel(channel)
+            }
+        } catch (t: Throwable) {
+            Log.w(TAG, "createChannel failed", t)
         }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // 确保启动为前台服务
+        // 启动为前台服务并立即发通知
         startForeground(NOTIF_ID, buildNotification())
+        // 也再次显示 notify 保证一些 ROM 的延迟刷新
+        try {
+            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.notify(NOTIF_ID, buildNotification())
+        } catch (t: Throwable) {
+            Log.w(TAG, "extra notify failed", t)
+        }
         return START_STICKY
     }
 
@@ -61,9 +80,10 @@ class SmsForegroundService : Service() {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("短信转发助手 - $status")
             .setContentText(latest)
-            .setSmallIcon(android.R.drawable.ic_dialog_info) // 保证系统图标可用
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setOngoing(true)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOnlyAlertOnce(true)
 
         // 点击通知回到主界面
@@ -92,4 +112,9 @@ class SmsForegroundService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
+
+    // 辅助：检查系统是否允许通知
+    fun areNotificationsEnabled(): Boolean {
+        return NotificationManagerCompat.from(this).areNotificationsEnabled()
+    }
 }
