@@ -29,6 +29,13 @@ class SmsForegroundService : Service() {
     private val updateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             try {
+                val action = intent?.action
+                if (action == ACTION_STOP) {
+                    // 停止服务（从通知 action 调用）
+                    stopSelf()
+                    LogStore.append(applicationContext, "收到通知停止服务请求，服务已停止")
+                    return
+                }
                 updateNotification()
             } catch (t: Throwable) {
                 Log.w(TAG, "updateNotification failed", t)
@@ -40,6 +47,8 @@ class SmsForegroundService : Service() {
         super.onCreate()
         createChannel()
         registerReceiver(updateReceiver, IntentFilter(ACTION_UPDATE))
+        // 监听停止 action
+        registerReceiver(updateReceiver, IntentFilter(ACTION_STOP))
     }
 
     private fun createChannel() {
@@ -93,6 +102,14 @@ class SmsForegroundService : Service() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT else PendingIntent.FLAG_UPDATE_CURRENT
         )
         builder.setContentIntent(pendingIntent)
+
+        // 增加一个停止服务的 action，方便调试
+        val stopIntent = Intent(ACTION_STOP)
+        val stopPending = PendingIntent.getBroadcast(
+            this, 1, stopIntent,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT else PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        builder.addAction(android.R.drawable.ic_menu_close_clear_cancel, "停止服务", stopPending)
 
         return builder.build()
     }

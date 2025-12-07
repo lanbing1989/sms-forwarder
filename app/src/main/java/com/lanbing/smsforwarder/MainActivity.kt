@@ -32,7 +32,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 注册短信权限回调
         requestSmsPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
                 Toast.makeText(this, "短信权限已授权", Toast.LENGTH_SHORT).show()
@@ -41,7 +40,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // 注册通知权限回调（仅 Android 13+）
         requestNotifPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
                 Toast.makeText(this, "通知权限已授权", Toast.LENGTH_SHORT).show()
@@ -68,7 +66,7 @@ class MainActivity : ComponentActivity() {
         val pkg = packageName
         val notifEnabled = NotificationManagerCompat.from(this).areNotificationsEnabled()
         if (!notifEnabled) {
-            // 引导用户到通知设置页
+            // 引导用户到应用的通知设置页（更醒目）
             Toast.makeText(this, "请允许应用通知（将打开通知设置）", Toast.LENGTH_LONG).show()
             val i = Intent().apply {
                 action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
@@ -108,6 +106,7 @@ fun SmsForwarderApp(
     var webhookUrl by remember { mutableStateOf(prefs.getString("webhook", "") ?: "") }
     var keywords by remember { mutableStateOf(prefs.getString("keywords", "") ?: "") }
     var isEnabled by remember { mutableStateOf(prefs.getBoolean("enabled", false)) }
+    var startOnBoot by remember { mutableStateOf(prefs.getBoolean("start_on_boot", false)) }
     var logs by remember { mutableStateOf(LogStore.readAll(context)) }
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -141,23 +140,37 @@ fun SmsForwarderApp(
                     isEnabled = checked
                     prefs.edit().putBoolean("enabled", isEnabled).apply()
                     if (checked) {
-                        // 请求权限（如需）
+                        // 请求通知权限（如果需要）和短信权限（如果需要）
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             val hasNotif = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
                             if (!hasNotif) onRequestNotificationPermission()
                         }
                         val hasSms = ContextCompat.checkSelfPermission(context, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED
                         if (!hasSms) onRequestSmsPermission()
-                        // 由 Activity 启动前台服务（含通知权限检查）
+                        // 启动前台服务（Activity 层会做二次检查）
                         onStartService()
                         LogStore.append(context, "服务已启动（由用户开启）")
-                        Toast.makeText(context, "服务已启动", Toast.LENGTH_SHORT).show()
                     } else {
                         onStopService()
                         LogStore.append(context, "服务已停止（由用户关闭）")
-                        Toast.makeText(context, "服务已停止", Toast.LENGTH_SHORT).show()
                     }
+                    // 更新通知
                     context.sendBroadcast(Intent(SmsForegroundService.ACTION_UPDATE))
+                })
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                Text("开机启动")
+                Switch(checked = startOnBoot, onCheckedChange = {
+                    startOnBoot = it
+                    prefs.edit().putBoolean("start_on_boot", startOnBoot).apply()
+                    if (startOnBoot) {
+                        LogStore.append(context, "已开启开机启动（注意：请在系统设置中允许自启动/省电豁免）")
+                    } else {
+                        LogStore.append(context, "已关闭开机启动")
+                    }
                 })
             }
 
@@ -169,6 +182,7 @@ fun SmsForwarderApp(
                         putString("webhook", webhookUrl.trim())
                         putString("keywords", keywords)
                         putBoolean("enabled", isEnabled)
+                        putBoolean("start_on_boot", startOnBoot)
                         apply()
                     }
                     Toast.makeText(context, "配置已保存", Toast.LENGTH_SHORT).show()
@@ -178,14 +192,23 @@ fun SmsForwarderApp(
                     Text("保存配置")
                 }
 
-                Button(onClick = {
-                    // 手动触发权限请求
-                    onRequestSmsPermission()
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Row {
+                    Button(onClick = {
+                        // 打开通知设置页
                         onRequestNotificationPermission()
+                    }) {
+                        Text("打开通知权限")
                     }
-                }) {
-                    Text("检查/请求权限")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(onClick = {
+                        // 打开应用详情设置（用户可在此设置自启动/省电等）
+                        val i = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        i.data = android.net.Uri.parse("package:" + context.packageName)
+                        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(i)
+                    }) {
+                        Text("打开应用设置")
+                    }
                 }
             }
 
