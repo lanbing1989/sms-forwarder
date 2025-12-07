@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    
+    <!-- White notification bell silhouette for status bar -->
+    <!-- Bell body and clapper -->
+    <path
+        android:pathData="M 12 2 
+                         C 11.2 2, 10.5 2.5, 10.5 3.2 
+                         L 10.5 3.8
+                         C 8.5 4.2, 7 6, 7 8.2
+                         L 7 14
+                         C 7 14, 6 15, 5 16
+                         L 5 17
+                         L 19 17
+                         L 19 16
+                         C 18 15, 17 14, 17 14
+                         L 17 8.2
+                         C 17 6, 15.5 4.2, 13.5 3.8
+                         L 13.5 3.2
+                         C 13.5 2.5, 12.8 2, 12 2 Z
+                         M 10 18.5
+                         C 10 19.9, 10.9 21, 12 21
+                         C 13.1 21, 14 19.9, 14 18.5
+                         Z"
+        android:fillColor="#FFFFFF"/>
+    
+    <!-- Notification indicator arcs (left) -->
+    <path
+        android:pathData="M 6 7 Q 4 8, 3 10"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+    
+    <!-- Notification indicator arcs (right) -->
+    <path
+        android:pathData="M 18 7 Q 20 8, 21 10"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+</vector>
