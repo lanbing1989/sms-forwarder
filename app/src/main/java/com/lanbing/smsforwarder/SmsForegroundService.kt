@@ -13,6 +13,8 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import android.app.PendingIntent
 import android.provider.Settings
 import android.util.Log
@@ -159,6 +161,16 @@ class SmsForegroundService : Service() {
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOnlyAlertOnce(true)
+
+        // Set large icon for better visibility in notification drawer
+        try {
+            val largeIcon = ContextCompat.getDrawable(this, R.drawable.ic_notify_large)?.toBitmap()
+            if (largeIcon != null) {
+                builder.setLargeIcon(largeIcon)
+            }
+        } catch (t: Throwable) {
+            Log.w(TAG, "Failed to set large icon", t)
+        }
 
         val piFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
