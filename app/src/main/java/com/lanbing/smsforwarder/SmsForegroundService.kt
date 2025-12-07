@@ -35,6 +35,10 @@ class SmsForegroundService : Service() {
         const val ACTION_UPDATE = "com.lanbing.smsforwarder.ACTION_LOG_UPDATED"
         const val ACTION_STOP = "com.lanbing.smsforwarder.ACTION_STOP_SERVICE"
         private const val TAG = "SmsForegroundService"
+        
+        // Android 14+ (API 34) 前台服务类型常量
+        // 如果编译环境不支持，使用硬编码值作为后备方案
+        private const val FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING = 16 // 0x00000010
     }
 
     private val updateReceiver = object : BroadcastReceiver() {
@@ -107,7 +111,7 @@ class SmsForegroundService : Service() {
         try {
             // Android 14+ 要在运行时传入对应类型
             if (Build.VERSION.SDK_INT >= 34) {
-                startForeground(NOTIF_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
+                startForeground(NOTIF_ID, notification, FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
             } else {
                 startForeground(NOTIF_ID, notification)
             }
