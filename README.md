@@ -5,6 +5,8 @@
 
 仓库：https://github.com/lanbing1989/sms-forwarder
 
+一般用户请直接下载构建好的APK 文件 https://github.com/lanbing1989/sms-forwarder/releases/tag/1.0
+
 ---
 
 ## 主要功能
@@ -176,8 +178,5 @@
 
 ---
 
-感谢使用 & 贡献！如果你需要，我可以帮你：
-- 生成 Release Notes 并打一个 tag；
-- 在 README 中加入更详细的截图和界面指南；
-- 帮你把当前改动整理成 PR 模板或 CI badge。
+感谢使用 & 贡献！
 ``` 
