@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.IBinder
@@ -82,23 +83,21 @@ class SmsForegroundService : Service() {
             buildNotification()
         } catch (t: Throwable) {
             Log.w(TAG, "buildNotification failed, use fallback", t)
-            val fallbackIcon = resolveSmallIcon()
+            // fallback: 直接使用编译时资源，确保 smallIcon 不会回退到系统占位
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("短信转发助手")
                 .setContentText("服务正在运行")
-                .setSmallIcon(fallbackIcon)
+                .setSmallIcon(R.drawable.ic_stat_notification)
                 .setOngoing(true)
                 .build()
         }
 
         try {
             if (Build.VERSION.SDK_INT >= 34) {
-                // 运行时通过反射读取常量，避免编译期依赖导致的 Unresolved reference
                 val type = getRemoteMessagingForegroundServiceType()
                 if (type != 0) {
                     startForeground(NOTIF_ID, notification, type)
                 } else {
-                    // 若反射失败，则仍尝试调用不带 type 的重载（有些设备兼容）；并记录以便调试
                     Log.w(TAG, "FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING not found via reflection, calling startForeground without type")
                     startForeground(NOTIF_ID, notification)
                 }
@@ -131,10 +130,6 @@ class SmsForegroundService : Service() {
         return START_STICKY
     }
 
-    /**
-     * 通过反射获取 android.app.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING 的值（如果存在）
-     * 若反射失败或常量不存在，返回 0（表示未找到）
-     */
     private fun getRemoteMessagingForegroundServiceType(): Int {
         return try {
             val cls = Class.forName("android.app.ServiceInfo")
@@ -146,11 +141,15 @@ class SmsForegroundService : Service() {
         }
     }
 
+    /**
+     * 保留 resolveSmallIcon 作为极小概率回退（仍优先使用编译时资源），但通知构建处已直接使用 R.drawable.ic_stat_notification
+     */
     private fun resolveSmallIcon(): Int {
-        val mipmapId = resources.getIdentifier("ic_notification", "mipmap", packageName)
-        if (mipmapId != 0) return mipmapId
-        val drawableId = resources.getIdentifier("ic_notification", "drawable", packageName)
-        if (drawableId != 0) return drawableId
+        val statDrawable = resources.getIdentifier("ic_stat_notification", "drawable", packageName)
+        if (statDrawable != 0) return statDrawable
+        val statMipmap = resources.getIdentifier("ic_stat_notification", "mipmap", packageName)
+        if (statMipmap != 0) return statMipmap
+
         val appIcon = applicationInfo.icon
         if (appIcon != 0) return appIcon
         return android.R.drawable.ic_dialog_info
@@ -165,11 +164,23 @@ class SmsForegroundService : Service() {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("短信转发助手 - $status")
             .setContentText(latest)
-            .setSmallIcon(resolveSmallIcon())
+            .setSmallIcon(R.drawable.ic_stat_notification) // <- 强制使用单色 small icon
             .setOngoing(true)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOnlyAlertOnce(true)
+
+        // 尝试设置彩色大图标（在展开的通知/设置中会显示），优先使用 mipmap/ic_launcher 或 drawable/ic_launcher
+        try {
+            val largeId = resources.getIdentifier("ic_launcher", "mipmap", packageName).takeIf { it != 0 }
+                ?: resources.getIdentifier("ic_launcher", "drawable", packageName).takeIf { it != 0 }
+            if (largeId != null && largeId != 0) {
+                val bmp = BitmapFactory.decodeResource(resources, largeId)
+                if (bmp != null) builder.setLargeIcon(bmp)
+            }
+        } catch (t: Throwable) {
+            Log.w(TAG, "setLargeIcon failed: ${t.message}")
+        }
 
         val piFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
