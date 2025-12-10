@@ -2,15 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- 必要权限 -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!-- Android 13+ 需要在 Manifest 中声明 POST_NOTIFICATIONS -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-    <!-- 可选：部分定制 ROM/厂商可能会额外校验此细化权限，声明能提高兼容性 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
 
     <application
@@ -48,7 +47,6 @@
             </intent-filter>
         </receiver>
 
-        <!-- 在清单中声明前台服务类型（Android 14+ 要求） -->
         <service
             android:name=".SmsForegroundService"
             android:exported="false"

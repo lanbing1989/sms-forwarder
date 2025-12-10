@@ -58,6 +58,9 @@ dependencies {
 
     implementation("androidx.compose.material3:material3:$material3Version")
 
+    // Icons (material icons extended) — 添加以解决 Icons.Default.History / Message 等引用
+    implementation("androidx.compose.material:material-icons-extended:$composeUiVersion")
+
     // Networking
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
 }
