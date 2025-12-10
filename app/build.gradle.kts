@@ -11,8 +11,14 @@ android {
         applicationId = "com.lanbing.smsforwarder"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+
+        // 1) 优先读取 Gradle property，再读取环境变量；没有时回退到默认值
+        val versionNameFromProp = (project.findProperty("VERSION_NAME") ?: System.getenv("VERSION_NAME"))?.toString()
+        val versionCodeFromProp = (project.findProperty("VERSION_CODE") ?: System.getenv("VERSION_CODE"))?.toString()
+
+        versionName = versionNameFromProp ?: "1.0"
+        versionCode = (versionCodeFromProp?.toIntOrNull() ?: 1)
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -44,7 +50,6 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            // 将 release buildType 关联到上面创建的 signingConfig
             signingConfig = signingConfigs.getByName("release")
         }
     }
@@ -61,6 +66,14 @@ android {
     // 与下面的 Compose 版本保持一致
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4"
+    }
+}
+
+// 调试用：打印当前 versionName/versionCode
+tasks.register("printVersion") {
+    doLast {
+        println("versionName = ${android.defaultConfig.versionName}")
+        println("versionCode = ${android.defaultConfig.versionCode}")
     }
 }
 
