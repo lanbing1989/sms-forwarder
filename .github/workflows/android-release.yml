@@ -3,11 +3,11 @@ name: Android Release Build
 on:
   push:
     tags:
-      - 'v*'            # push 一个以 v 开头的 tag 会触发，例如 v1.0.0
-  workflow_dispatch:   # 支持手动触发
+      - 'v*'            # push 一个以 v 开头的 tag 会触发，例如 v2.0.0
+  workflow_dispatch:
 
 permissions:
-  contents: write      # 用于创建 release 和上传资产
+  contents: write
 
 jobs:
   build-and-release:
@@ -45,16 +45,45 @@ jobs:
       - name: Verify keystore present
         run: ls -l ./keystore.jks || true
 
+      # ------------------ 新增：计算并导出版本号 ------------------
+      - name: Compute VERSION_NAME and VERSION_CODE
+        id: compute_version
+        shell: bash
+        run: |
+          echo "GITHUB_REF=${GITHUB_REF}"
+          # 如果由 tag 触发（例如 refs/tags/v2.0.0），提取 tag 并去掉前缀 v
+          if [[ "${GITHUB_REF##*/}" =~ ^v[0-9] ]]; then
+            TAG=${GITHUB_REF##*/}
+            VERSION_NAME=${TAG#v}
+          else
+            # fallback: 使用短 commit id
+            VERSION_NAME="0.0.0-${GITHUB_SHA::7}"
+          fi
+
+          # 简单且单调的 versionCode：使用 GITHUB_RUN_NUMBER（每次 workflow 递增）
+          VERSION_CODE=${GITHUB_RUN_NUMBER}
+
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+          echo "Computed VERSION_NAME=$VERSION_NAME VERSION_CODE=$VERSION_CODE"
+
+      # 可选：打印最终生效版本，便于在 Actions 日志确认（你的 build.gradle.kts 已包含 printVersion task）
+      - name: Print resolved version (debug)
+        shell: bash
+        run: |
+          # 使用 system gradle（与你的 debug workflow 一致）
+          gradle -q printVersion || true
+
+      # ------------------ 构建时把版本以 -P 传入（兼容 project.findProperty） ------------------
       - name: Build release (assembleRelease)
         env:
-          # 把 secrets 注入为 environment，app/build.gradle.kts 会读取这些 env / project property
           KEYSTORE_FILE: ${{ github.workspace }}/keystore.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          # 使用 system gradle（与 debug workflow 保持一致）
-          gradle clean assembleRelease --no-daemon
+          # 通过 -P 传递 VERSION_NAME / VERSION_CODE，build.gradle.kts 会用 project.findProperty 优先读取
+          gradle clean assembleRelease -PVERSION_NAME="${{ env.VERSION_NAME }}" -PVERSION_CODE="${{ env.VERSION_CODE }}" --no-daemon
 
       - name: Find artifact
         id: find_artifact
