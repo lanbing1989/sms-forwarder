@@ -1,156 +1,339 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>隐私政策 — 短信转发助手</title>
-  <meta name="description" content="短信转发助手 隐私政策 — 应用在运行过程中会访问的权限、收集或处理的数据类型、用途、存储与共享方式、用户权利等说明。" />
-  <style>
-    :root{
-      --bg: #f6f8fa;
-      --surface: #ffffff;
-      --muted: #6b7280;
-      --text: #0f1724;
-      --accent: #0ea5a4;
-      --card-border: rgba(15,23,36,0.06);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter, "Helvetica Neue", Arial, "PingFang SC", sans-serif;background:linear-gradient(180deg,var(--bg),#eef2f7);color:var(--text);padding:28px}
-    .wrap{max-width:900px;margin:0 auto}
-    .card{background:var(--surface);border-radius:12px;padding:28px;border:1px solid var(--card-border);box-shadow:0 10px 40px rgba(2,6,23,0.04)}
-    h1{margin:0 0 6px 0;font-size:22px}
-    .meta{color:var(--muted);margin-bottom:18px}
-    h2{margin-top:18px;color:var(--text)}
-    p, li{color:#243043;line-height:1.7}
-    a{color:var(--accent);text-decoration:none;font-weight:600}
-    pre{background:#0f1724;color:#e6eef8;padding:12px;border-radius:8px;overflow:auto;font-size:13px}
-    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:right}
-    ul{margin-left:18px}
-    .muted{color:var(--muted)}
-    .back{display:inline-block;margin-bottom:12px;color:var(--accent);text-decoration:none;font-weight:600}
-  </style>
+
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐私政策 - 短信转发助手</title>
+    <link href="https://gw.alipayobjects.com/render/p/yuyan/180023180003946312/material-icons.css" rel="stylesheet">
+    <script>window.injectInfo = { env: "PROD" };</script><script>window.publicPath = "https://gw.alipayobjects.com/render/p/yuyan/180023180034880980/";</script><script src="https://gw.alipayobjects.com/render/p/yuyan/180023180027026141/mini-app-log.js"></script>
+    <script defer="" src="https://gw.alipayobjects.com/render/p/yuyan/180023180027026141/mini_app_base.js"></script>
+    <script defer="" src="https://gw.alipayobjects.com/render/p/yuyan/180023180000534978/tailwind4.1.13.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #F0F7FF 0%, #E6F3FF 50%, #F0F7FF 100%);
+            min-height: 100vh;
+        }
+        .container {
+            margin-left: 0;
+            margin-right: 0;
+            max-width: 100%;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #5B9FEF 0%, #4A8FE8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .policy-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(91, 159, 239, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(91, 159, 239, 0.1);
+        }
+        .back-button {
+            background: linear-gradient(135deg, #5B9FEF 0%, #4A8FE8 100%);
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(91, 159, 239, 0.4);
+        }
+        .section-title {
+            border-left: 4px solid #5B9FEF;
+            padding-left: 16px;
+            margin: 24px 0 16px 0;
+        }
+        .policy-item {
+            transition: all 0.3s ease;
+        }
+        .policy-item:hover {
+            background-color: rgba(91, 159, 239, 0.05);
+            border-radius: 8px;
+        }
+        .highlight-text {
+            background: linear-gradient(135deg, rgba(91, 159, 239, 0.1) 0%, rgba(74, 143, 232, 0.1) 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card" role="main">
-      <a class="back" href="index.html">← 返回主页</a>
-      <h1>隐私政策 —— 短信转发助手</h1>
-      <div class="meta">
-        生效日期：2025-12-10<br/>
-        开发者 / 负责人：华昊科技有限公司<br/>
-        联系邮箱：<a href="mailto:lanbing89@gmail.com">lanbing89@gmail.com</a>
-      </div>
+    <div id="container" class="container">
+        <!-- 头部导航 -->
+        <header class="bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg shadow-sm sticky top-0 z-10">
+            <div class="px-4 py-4 flex items-center justify-between">
+                <button class="back-button text-white px-4 py-2 rounded-full flex items-center" data-testid="back-button" onclick="goBack()">
+                    <span class="material-icons mr-2">arrow_back</span>
+                    返回主页
+                </button>
+                <h1 class="text-xl font-bold gradient-text">隐私政策</h1>
+                <div class="w-20"></div>
+            </div>
+        </header>
 
-      <p class="muted">说明：本隐私政策基于对应用源码的审阅（开源仓库：<a href="https://github.com/lanbing1989/sms-forwarder" target="_blank" rel="noopener">https://github.com/lanbing1989/sms-forwarder</a>），说明本应用在运行过程中会访问的权限、收集或处理的数据类型、用途、存储与共享方式、用户权利等信息。请在使用前仔细阅读。</p>
+        <!-- 主要内容区域 -->
+        <main class="px-4 py-8 max-w-4xl mx-auto">
+            <!-- 政策概述 -->
+            <section class="policy-card p-6 mb-6">
+                <div class="text-center mb-6">
+                    <span class="material-icons text-5xl text-blue-500 mb-4">security</span>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-3">短信转发助手隐私政策</h2>
+                    <p class="text-gray-600">最后更新时间：2025年12月10日</p>
+                </div>
+                
+                <div class="bg-blue-50 rounded-lg p-4 mb-6">
+                    <p class="text-gray-700 leading-relaxed">
+                        <span class="font-semibold">短信转发助手</span>（以下简称"我们"）非常重视用户的隐私保护。本隐私政策说明了我们如何收集、使用、存储和保护您的个人信息。使用我们的应用即表示您同意本政策中描述的做法。
+                    </p>
+                </div>
+            </section>
 
-      <h2>一、我们会处理/访问的信息类型与用途（基于源码）</h2>
-      <p>本应用核心功能为：在用户设备上根据用户配置将收到的短信按规则转发到用户指定的通道（如 Webhook、短信通道等）。所有处理优先在设备本地完成。具体数据类型与用途如下：</p>
+            <!-- 信息收集 -->
+            <section class="policy-card p-6 mb-6">
+                <h3 class="section-title text-xl font-semibold text-gray-800">1. 信息收集与处理</h3>
+                
+                <div class="space-y-4">
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-blue-500 mr-2">sms</span>
+                            短信内容及相关信息（敏感个人信息）
+                        </h4>
+                        <p class="text-gray-600">类型：收到的短信文本内容、发送者号码（原始号码）、短信时间戳等。<br/>
+用途：用于在设备上匹配用户配置的关键词规则并执行转发（例如发送到用户配置的 webhook 或通过设备发送到目标手机号）；同时记录本地转发日志以供用户查看和排查。<br/>
+上传说明：应用不会将短信内容或相关敏感信息自动上传到开发者服务器或任何第三方服务器。唯一会把短信内容发送到网络的情形是：用户自行在应用中配置了一个 webhook（HTTP/HTTPS URL）作为转发目标；应用会将短信内容直接 POST 到该用户指定的第三方 URL（请在配置时谨慎选择接收方并确认其隐私做法）。开发者不对这些第三方接收方的数据处理负责。<br/>我们仅在您<span class="highlight-text">明确授权</span>的情况下访问短信内容，用于转发功能。我们不会存储您的短信内容，仅在转发过程中临时处理。</p>
+                    </div>
 
-      <ol>
-        <li>
-          <strong>短信内容及相关信息（敏感个人信息）</strong>
-          <ul>
-            <li>类型：收到的短信文本内容、发送者号码（原始号码）、短信时间戳等。</li>
-            <li>用途：用于在设备上匹配用户配置的关键词规则并执行转发（例如发送到用户配置的 webhook 或通过设备发送到目标手机号）；同时记录本地转发日志以供用户查看和排查。</li>
-            <li>上传说明：应用不会将短信内容或相关敏感信息自动上传到开发者服务器或任何第三方服务器。唯一会把短信内容发送到网络的情形是：用户自行在应用中配置了一个 webhook（HTTP/HTTPS URL）作为转发目标；应用会将短信内容直接 POST 到该用户指定的第三方 URL（请在配置时谨慎选择接收方并确认其隐私做法）。开发者不对这些第三方接收方的数据处理负责。</li>
-          </ul>
-        </li>
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-blue-500 mr-2">contact_phone</span>
+                            发送短信相关信息（仅在用户选择 SMS 通道时）
+                        </h4>
+                        <p class="text-gray-600">类型：用户为“SMS”类型通道配置的目标手机号、（可选）用于发送的 SIM subscriptionId（subId）。<br/>
+用途：当用户在通道管理中添加 SMS 类型通道且启用该通道时，应用会通过设备的 SmsManager 使用设备的短信功能将原始短信内容转发到用户指定的目标手机号。源码中实现会使用 sendMultipartTextMessage 以保证长短信正确拼接发送。<br/>
+上传说明：发送操作仅在用户设备本地通过系统短信服务完成；应用不会将发送的短信内容发送至开发者服务器。</p>
+                    </div>
 
-        <li>
-          <strong>发送短信相关信息（仅在用户选择 SMS 通道时）</strong>
-          <ul>
-            <li>类型：用户为“SMS”类型通道配置的目标手机号、（可选）用于发送的 SIM subscriptionId（subId）。</li>
-            <li>用途：当用户在通道管理中添加 SMS 类型通道且启用该通道时，应用会通过设备的 SmsManager 使用设备的短信功能将原始短信内容转发到用户指定的目标手机号。源码中实现会使用 sendMultipartTextMessage 以保证长短信正确拼接发送。</li>
-            <li>上传说明：发送操作仅在用户设备本地通过系统短信服务完成；应用不会将发送的短信内容发送至开发者服务器。</li>
-          </ul>
-        </li>
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-blue-500 mr-2">settings</span>
+                            设备与运行信息（非敏感 / 技术性）
+                        </h4>
+                        <p class="text-gray-600">类型：应用版本、Android 版本、设备型号、运行时日志（应用内部日志文件）、崩溃或错误信息（默认不自动上报）。<br/>
+用途：用于本地诊断、日志记录和用户在应用内查看转发历史/调试信息。<br/>
+上传说明：本应用不集成任何自动上报的第三方崩溃分析或统计 SDK；也不会默认将日志/崩溃信息上传到开发者服务器。仅当未来新增“发送错误报告”并在界面明确提示且获得用户同意时，才可能上传日志或错误信息（当前版本未包含自动上报逻辑）。</p>
+                    </div>
+                </div>
+            </section>
 
-        <li>
-          <strong>设备与运行信息（非敏感 / 技术性）</strong>
-          <ul>
-            <li>类型：应用版本、Android 版本、设备型号、运行时日志（应用内部日志文件）、崩溃或错误信息（默认不自动上报）。</li>
-            <li>用途：用于本地诊断、日志记录和用户在应用内查看转发历史/调试信息。</li>
-            <li>上传说明：本应用不集成任何自动上报的第三方崩溃分析或统计 SDK；也不会默认将日志/崩溃信息上传到开发者服务器。仅当未来新增“发送错误报告”并在界面明确提示且获得用户同意时，才可能上传日志或错误信息（当前版本未包含自动上报逻辑）。</li>
-          </ul>
-        </li>
-      </ol>
+            <!-- 信息使用 -->
+            <section class="policy-card p-6 mb-6">
+                <h3 class="section-title text-xl font-semibold text-gray-800">2. 应用请求的权限与用途</h3>
+                
+                <div class="space-y-4">
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-green-500 mr-2">check_circle</span>
+                            RECEIVE_SMS / READ_SMS（接收/读取短信）
+                        </h4>
+                        <p class="text-gray-600">用途：监听并读取设备收到的短信内容，用于在设备端按用户配置进行转发与规则匹配。若用户拒绝该权限，应用无法读取到短信，核心转发功能将无法使用。</p>
+                    </div>
 
-      <h2>二、应用请求的权限与用途（可直接复制至小米后台）</h2>
-      <p>下面列出应用在 AndroidManifest 与源码中实际使用的权限，以及每项权限的用途说明（精准对应源码行为）：</p>
-      <ul>
-        <li><strong>RECEIVE_SMS / READ_SMS（接收/读取短信）</strong><br/>用途：监听并读取设备收到的短信内容，用于在设备端按用户配置进行转发与规则匹配。若用户拒绝该权限，应用无法读取到短信，核心转发功能将无法使用。</li>
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-green-500 mr-2">tune</span>
+                            SEND_SMS（发送短信）
+                        </h4>
+                        <p class="text-gray-600">用途：当且仅当用户在“转发通道”中添加并启用类型为 SMS 的通道时，应用会使用系统短信功能将短信内容转发到用户配置的目标手机号（通过 SmsManager 发送，多段短信会使用 sendMultipartTextMessage 保持拼接）。若用户不添加 SMS 通道或未授予该权限，应用不会发送短信。</p>
+                    </div>
 
-        <li><strong>SEND_SMS（发送短信）</strong><br/>用途：当且仅当用户在“转发通道”中添加并启用类型为 SMS 的通道时，应用会使用系统短信功能将短信内容转发到用户配置的目标手机号（通过 SmsManager 发送，多段短信会使用 sendMultipartTextMessage 保持拼接）。若用户不添加 SMS 通道或未授予该权限，应用不会发送短信。</li>
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-green-500 mr-2">support</span>
+                            READ_PHONE_STATE（用于读取 SIM / subscription 信息）
+                        </h4>
+                        <p class="text-gray-600">用途：在用户选择 SMS 通道并需要指定发送 SIM 卡（多卡设备）时，用于读取卡信息并允许用户选择要用于发送的 subscriptionId（subId）。此权限为按需请求，仅在需显示/选择卡信息时请求；若未授权，应用仍可使用默认短信管理器发送（但无法列出/选择具体 SIM 卡）。</p>
+                    </div>
+					 <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-green-500 mr-2">support</span>
+                           RECEIVE_BOOT_COMPLETED（开机自启）
+                        </h4>
+                        <p class="text-gray-600">用途：当用户在设置中启用“开机自启动”后，应用会在设备开机完成后启动前台服务以保持转发服务持续运行；若用户不启用或撤销此权限，应用不会自动在开机时启动。</p>
+                    </div>
+					 <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-green-500 mr-2">support</span>
+                           POST_NOTIFICATIONS（通知权限）
+                        </h4>
+                        <p class="text-gray-600">用途：用于显示应用的前台服务常驻通知（前台服务要求），提示服务状态与快速操作（例如停止服务）。应用在启动服务前会检查并提示用户开启通知权限。</p>
+                    </div>
+					 <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-green-500 mr-2">support</span>
+                            INTERNET（网络访问）
+                        </h4>
+                        <p class="text-gray-600">用途：用于将短信转发到用户配置的网络通道（Webhook 等）。仅在用户主动配置 Webhook 时用于网络请求；默认不上传任何数据至开发者服务器。</p>
+                    </div>
+					 <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-green-500 mr-2">support</span>
+                            FOREGROUND_SERVICE / FOREGROUND_SERVICE_REMOTE_MESSAGING（前台服务类型声明）
+                        </h4>
+                        <p class="text-gray-600">用途：支持启动前台服务以提高长期运行稳定性并满足不同 Android 版本的前台服务类型要求。</p>
+                    </div>
+                </div>
+            </section>
 
-        <li><strong>READ_PHONE_STATE（用于读取 SIM / subscription 信息）</strong><br/>用途：在用户选择 SMS 通道并需要指定发送 SIM 卡（多卡设备）时，用于读取卡信息并允许用户选择要用于发送的 subscriptionId（subId）。此权限为按需请求，仅在需显示/选择卡信息时请求；若未授权，应用仍可使用默认短信管理器发送（但无法列出/选择具体 SIM 卡）。</li>
+            <!-- 信息保护 -->
+            <section class="policy-card p-6 mb-6">
+                <h3 class="section-title text-xl font-semibold text-gray-800">3. 数据存储与备份</h3>
+                
+                <div class="space-y-4">
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-red-500 mr-2">lock</span>
+                            服务器存储
+                        </h4>
+                        <p class="text-gray-600">本应用当前<span class="highlight-text">不会将短信、联系人或转发记录上传到开发者服务器或第三方服务器</span>（开发者也未集成任何收集类 SDK）。</p>
+                    </div>
 
-        <li><strong>RECEIVE_BOOT_COMPLETED（开机自启）</strong><br/>用途：当用户在设置中启用“开机自启动”后，应用会在设备开机完成后启动前台服务以保持转发服务持续运行；若用户不启用或撤销此权限，应用不会自动在开机时启动。</li>
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-red-500 mr-2">storage</span>
+                            本地存储
+                        </h4>
+                        <p class="text-gray-600">您的个人信息和短信内容应用在设备内部存储（context.filesDir）保存。转发日志文件（文件名：sms_forwarder_logs.txt），用于在应用内展示最近的运行/转发信息；该文件保留最近若干条（源码中限制为最多 200 条）；应用配置与通道/关键词规则保存在 SharedPreferences（名称 "app_config"）中。</p>
+                    </div>
 
-        <li><strong>POST_NOTIFICATIONS（通知权限）</strong><br/>用途：用于显示应用的前台服务常驻通知（前台服务要求），提示服务状态与快速操作（例如停止服务）。应用在启动服务前会检查并提示用户开启通知权限。</li>
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-red-500 mr-2">security</span>
+                            设备备份
+                        </h4>
+                        <p class="text-gray-600">应用在 Manifest 中允许备份（android:allowBackup="true"），这意味着在设备或用户启用的系统备份机制下，应用数据可能被包含在系统备份中；如需避免被备份，请在设备/账户备份设置中管理。</p>
+                    </div>
+                </div>
+            </section>
 
-        <li><strong>INTERNET（网络访问）</strong><br/>用途：用于将短信转发到用户配置的网络通道（Webhook 等）。仅在用户主动配置 Webhook 时用于网络请求；默认不上传任何数据至开发者服务器。</li>
+            <!-- 用户权利 -->
+            <section class="policy-card p-6 mb-6">
+                <h3 class="section-title text-xl font-semibold text-gray-800">4. 用户权利与可控性</h3>
+                
+                <div class="space-y-4">
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-purple-500 mr-2">visibility</span>
+                            权限控制
+                        </h4>
+                        <p class="text-gray-600">用户可通过 Android 系统权限管理随时撤销或授予权限（例如 RECEIVE_SMS、SEND_SMS、READ_PHONE_STATE、POST_NOTIFICATIONS 等）。撤销权限会影响对应功能（例如撤销 RECEIVE_SMS 则无法实现接收并转发短信；撤销 SEND_SMS 则 SMS 通道无法发送）。</p>
+                    </div>
 
-        <li><strong>FOREGROUND_SERVICE / FOREGROUND_SERVICE_REMOTE_MESSAGING（前台服务类型声明）</strong><br/>用途：支持启动前台服务以提高长期运行稳定性并满足不同 Android 版本的前台服务类型要求。</li>
-      </ul>
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-purple-500 mr-2">edit</span>
+                            数据查看与删除
+                        </h4>
+                        <p class="text-gray-600">本地日志可以在应用内查看、刷新或清除（应用 UI 提供清除日志功能）。<br/>
+应用数据（配置、通道、关键词）保存在本地 SharedPreferences，用户可以在应用内删除或通过卸载应用清除。<br/>
+如果确有场景导致开发者持有用户数据（当前版本通常不会），用户可通过联系邮箱 lanbing89@gmail.com 提出数据访问或删除请求。开发者在验证请求人身份后将在合理期限内处理（通常不超过 30 天）。</p>
+                    </div>
 
-      <h2>三、数据存储与备份</h2>
-      <ul>
-        <li><strong>本地存储：</strong>应用在设备内部存储（context.filesDir）保存：转发日志文件（文件名：sms_forwarder_logs.txt），用于在应用内展示最近的运行/转发信息；该文件保留最近若干条（源码中限制为最多 200 条）；应用配置与通道/关键词规则保存在 SharedPreferences（名称 "app_config"）中。</li>
-        <li><strong>服务器存储：</strong>本应用当前不会将短信、联系人或转发记录上传到开发者服务器或第三方服务器（开发者也未集成任何收集类 SDK）。</li>
-        <li><strong>设备备份：</strong>应用在 Manifest 中允许备份（android:allowBackup="true"），这意味着在设备或用户启用的系统备份机制下，应用数据可能被包含在系统备份中；如需避免被备份，请在设备/账户备份设置中管理。</li>
-      </ul>
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-purple-500 mr-2">delete</span>
+                            导出
+                        </h4>
+                        <p class="text-gray-600">若需要导出本地数据（例如日志或配置），用户可在设备上手动导出或开发者将根据具体功能在应用内提供导出入口（当前版本未提供自动上传/导出到开发者服务器的行为）。</p>
+                    </div>
+                </div>
+            </section>
 
-      <h2>四、数据共享与第三方</h2>
-      <p>用户指定的转发目标（Webhook、第三方服务或目标手机号）：当用户将转发目标设置为第三方 URL 或服务时，应用会把短信内容直接发送到该第三方目标（通过 HTTP POST 或发送 SMS），这些数据会由该第三方接收并由其处理。开发者不会默认收集或转发这些数据到自己的服务器，且不对第三方的隐私实践负责。用户应谨慎选择转发目标并确认其隐私与安全政策。</p>
-      <p>第三方 SDK：当前版本未集成任何第三方数据收集类 SDK（例如统计、崩溃、广告等）。如未来集成会在隐私政策中说明并征得必要同意。</p>
+            <!-- 第三方共享 -->
+            <section class="policy-card p-6 mb-6">
+                <h3 class="section-title text-xl font-semibold text-gray-800">5. 数据共享与第三方</h3>
+                
+                <div class="bg-yellow-50 rounded-lg p-4 mb-4">
+                    <p class="text-gray-700">
+                        <span class="font-semibold text-yellow-700">重要声明：</span>
+                        我们<span class="highlight-text">不会采集、共享、出售</span>您的个人信息给第三方。
+                    </p>
+                </div>
 
-      <h2>五、用户权利与可控性</h2>
-      <ul>
-        <li><strong>权限控制：</strong>用户可通过 Android 系统权限管理随时撤销或授予权限（例如 RECEIVE_SMS、SEND_SMS、READ_PHONE_STATE、POST_NOTIFICATIONS 等）。撤销权限会影响对应功能（例如撤销 RECEIVE_SMS 则无法实现接收并转发短信；撤销 SEND_SMS 则 SMS 通道无法发送）。</li>
-        <li><strong>数据查看与删除：</strong>本地日志可以在应用内查看、刷新或清除（应用 UI 提供清除日志功能）。应用数据（配置、通道、关键词）保存在本地 SharedPreferences，用户可以在应用内删除或通过卸载应用清除。如果确有场景导致开发者持有用户数据（当前版本通常不会），用户可通过联系邮箱 lanbing89@gmail.com 提出数据访问或删除请求。开发者在验证请求人身份后将在合理期限内处理（通常不超过 30 天）。</li>
-        <li><strong>导出：</strong>若需要导出本地数据（例如日志或配置），用户可在设备上手动导出或开发者将根据具体功能在应用内提供导出入口（当前版本未提供自动上传/导出到开发者服务器的行为）。</li>
-      </ul>
+                <div class="space-y-4">
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-orange-500 mr-2">email</span>
+                            用户指定的转发目标（Webhook、第三方服务或目标手机号）
+                        </h4>
+                        <p class="text-gray-600">当用户将转发目标设置为第三方 URL 或服务时，应用会把短信内容直接发送到该第三方目标（通过 HTTP POST 或发送 SMS），这些数据会由该第三方接收并由其处理。开发者不会默认收集或转发这些数据到自己的服务器，且不对第三方的隐私实践负责。用户应谨慎选择转发目标并确认其隐私与安全政策。</p>
+                    </div>
 
-      <h2>六、安全措施</h2>
-      <ul>
-        <li>应用尽量将数据处理限制在用户设备本地，减少数据外泄风险。</li>
-        <li>应用在进行网络转发时对用户输入的 URL 做基本校验；网络传输的安全性取决于目标服务是否支持 HTTPS。请优先使用 HTTPS 目标以降低传输风险。</li>
-        <li>开发者会尽合理努力防范未经授权的访问，但任何网络或存储机制都无法保证 100% 安全。</li>
-      </ul>
+                    <div class="policy-item p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span class="material-icons text-orange-500 mr-2">gavel</span>
+                            第三方 SDK
+                        </h4>
+                        <p class="text-gray-600">当前版本未集成任何第三方数据收集类 SDK（例如统计、崩溃、广告等）。如未来集成会在隐私政策中说明并征得必要同意。</p>
+                    </div>
+                </div>
+            </section>
 
-      <h2>七、儿童隐私</h2>
-      <p>本应用并非专为 14 岁以下儿童设计，也不会有意收集 14 岁以下儿童的个人信息。如发现误收集，请通过联系邮箱联系我们以便删除相关数据。</p>
+            <!-- 政策更新 -->
+            <section class="policy-card p-6 mb-6">
+                <h3 class="section-title text-xl font-semibold text-gray-800">6. 政策更新</h3>
+                
+                <div class="space-y-4">
+                    <p class="text-gray-600">我们可能会不时更新本隐私政策。重大变更时，我们会通过应用内通知或其他方式告知您。建议您定期查看本政策以了解最新信息。</p>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2">更新历史：</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• 2025年12月10日 - 首次发布隐私政策</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
 
-      <h2>八、开源声明与源码</h2>
-      <p>本应用为开源软件，源代码托管于 GitHub： <a href="https://github.com/lanbing1989/sms-forwarder" target="_blank" rel="noopener">https://github.com/lanbing1989/sms-forwarder</a> 。建议用户或审核方查阅仓库中的 LICENSE 文件以了解具体许可条款；如果仓库未包含 LICENSE，请联系开发者获取许可信息。</p>
-      <p>隐私政策基于对公开源码的审阅而编写；若源码有变更请以仓库为准，并以应用发布版本为最终行为依据。</p>
+            <!-- 联系我们 -->
+            <section class="policy-card p-6 mb-6">
+                <h3 class="section-title text-xl font-semibold text-gray-800">7. 联系我们</h3>
+                
+                <div class="space-y-4">
+                    <p class="text-gray-600">如果您对本隐私政策有任何疑问或建议，请通过以下方式联系我们：</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="policy-item p-4">
+                            <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                                <span class="material-icons text-blue-500 mr-2">email</span>
+                                邮箱
+                            </h4>
+                            <p class="text-gray-600">lanbing89@gmail.com</p>
+                        </div>
+                        
+                        <div class="policy-item p-4">
+                            <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                                <span class="material-icons text-blue-500 mr-2">phone</span>
+                                客服热线
+                            </h4>
+                            <p class="text-gray-600">18005378833</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-      <h2>九、隐私政策变更</h2>
-      <p>若本隐私政策发生变更（例如新增上传、集成第三方 SDK 或改变数据处理方式），我们会在应用更新说明、应用内或应用商店应用页公示并在需要时向用户征得明确同意。</p>
-
-      <h2>十、联系我们</h2>
-      <p>
-        开发者 / 负责人：华昊科技有限公司<br/>
-        联系邮箱：<a href="mailto:lanbing89@gmail.com">lanbing89@gmail.com</a><br/>
-        处理时效：我们会在收到完整请求后的合理期限内（通常不超过 30 天）予以回复或处理。为保护隐私，可能需要对请求人进行合理的身份验证。
-      </p>
-
-      <h3>小米商店填写摘要（可直接复制）</h3>
-      <pre>
-- 是否上传至开发者/第三方服务器：否（应用不将短信/联系人等敏感数据上传到开发者或第三方服务器；用户自行配置的 Webhook 会将数据发送到该第三方）
-- 是否集成第三方 SDK：否
-- 是否支持代发短信（使用设备短信功能将短信转发到目标手机号）：是（仅当用户配置并启用 SMS 类型通道时；需 SEND_SMS 权限）
-- 敏感权限列表（短句说明）：
-  - RECEIVE_SMS / READ_SMS：用于在设备端读取收到的短信，以实现转发与规则匹配；若拒绝该权限，核心功能不可用。
-  - SEND_SMS：用于将短信通过设备短信功能转发到用户配置的目标手机号（仅在用户添加并启用 SMS 通道时请求）。
-  - READ_PHONE_STATE：按需用于读取 SIM/subscription 信息以支持多卡选择（仅在用户选择 SMS 通道并选择卡时请求）。
-  - RECEIVE_BOOT_COMPLETED：用于在用户启用开机自启时在开机完成后启动前台服务。
-  - POST_NOTIFICATIONS：用于显示前台服务通知，提示服务状态与提供快速操作。
-  - INTERNET：用于将短信转发到用户配置的网络通道（Webhook）。
-      </pre>
-
-      <footer>感谢您使用“短信转发助手”。</footer>
+            <!-- 确认按钮 -->
+            <section class="text-center py-8">
+                <button class="back-button text-white font-semibold py-3 px-8 rounded-full text-lg shadow-lg" data-testid="confirm-button" onclick="goBack()">
+                    <span class="material-icons align-middle mr-2">check_circle</span>
+                    我已了解并同意
+                </button>
+                <p class="text-sm text-gray-500 mt-4">返回主页继续使用短信转发助手</p>
+            </section>
+        </main>
     </div>
-  </div>
-</body>
-</html>
+
+    <script src="https://gw.alipayobjects.com/render/p/yuyan/180023180034880980/privacy.js"></script>
+
+</body></html>
