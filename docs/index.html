@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>短信转发助手 — 短信转发服务</title>
+  <meta name="description" content="短信转发助手：一个轻量的短信转发/转发器，支持本地转发、Webhook、HTTP API、MQTT 与多种后端" />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#7dd3fc; --accent-2:#60a5fa;
+      --glass: rgba(255,255,255,0.03);
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(180deg,#071026 0%, #07182b 100%); color:#e6eef8; -webkit-font-smoothing:antialiased}
+    .container{max-width:1000px;margin:40px auto;padding:28px}
+    header{display:flex;align-items:center;gap:18px}
+    .logo{width:72px;height:72px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#04263b;font-size:18px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+    h1{margin:0;font-size:28px}
+    .meta{color:var(--muted);margin-top:6px}
+    .badges{margin-left:auto;display:flex;gap:8px;align-items:center}
+    .card{background:var(--card);border-radius:12px;padding:18px;margin-top:22px;box-shadow:0 6px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02)}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+    .features{display:flex;flex-direction:column;gap:14px}
+    .feature{display:flex;gap:12px;align-items:flex-start}
+    .feature .icon{width:44px;height:44;border-radius:10px;background:var(--glass);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:700}
+    pre{background:rgba(0,0,0,0.25);padding:12px;border-radius:8px;overflow:auto;color:#cfeffc}
+    a.button{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent-2));padding:10px 14px;border-radius:10px;color:#002235;font-weight:600;text-decoration:none}
+    section h2{margin-top:0}
+    .muted{color:var(--muted)}
+    .small{font-size:13px}
+    footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
+    .pill{display:inline-block;padding:6px 10px;background:rgba(255,255,255,0.02);border-radius:999px;font-size:13px}
+    nav.toplinks{margin-top:10px;display:flex;gap:12px;align-items:center}
+    nav.toplinks a{color:var(--accent);text-decoration:none;font-size:14px}
+    @media (max-width:880px){.grid{grid-template-columns:1fr}.badges{display:none}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">短信</div>
+      <div>
+        <h1>短信转发助手</h1>
+        <div class="meta">轻量、可扩展的短信转发服务 — 本地/HTTP/Webhook/MQTT 多种输出方式</div>
+        <nav class="toplinks" aria-label="快速链接">
+          <a href="docs/USAGE.md">使用说明</a>
+          <a href="docs/CONFIGURATION.md">配置参考</a>
+          <a href="privacy.html">隐私政策</a>
+          <a href="https://github.com/lanbing1989/sms-forwarder" target="_blank" rel="noopener">仓库</a>
+        </nav>
+      </div>
+      <div class="badges">
+        <img src="https://img.shields.io/github/stars/lanbing1989/sms-forwarder?style=flat&color=blue" alt="stars" />
+        <img src="https://img.shields.io/github/issues/lanbing1989/sms-forwarder?style=flat&color=informational" alt="issues" />
+        <img src="https://img.shields.io/github/license/lanbing1989/sms-forwarder?style=flat&color=success" alt="license" />
+      </div>
+    </header>
+
+    <div class="card grid" role="main">
+      <div>
+        <section>
+          <h2>概述</h2>
+          <p class="muted">短信转发助手 是一个面向个人用户与轻量服务器的短信转发解决方案，旨在把接收到的短信按规则转发到 HTTP(s) Webhook、MQTT、Email 或第三方 API。适合做短信通知中转、自动化触发、或与家庭/物联网集成。</p>
+        </section>
+
+        <section style="margin-top:10px">
+          <h2>核心功能</h2>
+          <div class="features">
+            <div class="feature"><div class="icon">⚡</div><div><strong>实时转发</strong><div class="muted small">低延迟把收到的短信转发到指定目标</div></div></div>
+            <div class="feature"><div class="icon">🔁</div><div><strong>条件/规则转发</strong><div class="muted small">支持按发件人、关键词、正则、优先级等筛选规则</div></div></div>
+            <div class="feature"><div class="icon">🔒</div><div><strong>多种后端</strong><div class="muted small">Webhook、HTTP API、MQTT、SMTP（可扩展插件）</div></div></div>
+            <div class="feature"><div class="icon">📦</div><div><strong>易部署</strong><div class="muted small">支持 Docker、Systemd、轻量二进制部署</div></div></div>
+            <div class="feature"><div class="icon">🧩</div><div><strong>可扩展</strong><div class="muted small">配置驱动，易于集成到自动化平台</div></div></div>
+            <div class="feature"><div class="icon">📜</div><div><strong>日志与重试</strong><div class="muted small">失败重试与可追踪日志，方便故障排查</div></div></div>
+          </div>
+        </section>
+
+        <section style="margin-top:16px">
+          <h2>快速开始（最短示例）</h2>
+          <p class="muted small">下面展示最小化运行示例。更多配置请参见下方“配置”章节。</p>
+          <pre><code># 1. 克隆仓库
+git clone https://github.com/lanbing1989/sms-forwarder.git
+cd sms-forwarder
+
+# 2. 使用 Docker 快速启动（示例）
+docker run -d --name sms-forwarder \
+  -p 8080:8080 \
+  -v $(pwd)/config.yml:/app/config.yml \
+  lanbing1989/sms-forwarder:latest
+
+# 3. 打开管理页面或查看日志
+docker logs -f sms-forwarder
+</code></pre>
+        </section>
+
+        <section style="margin-top:16px">
+          <h2>示例配置（config.yml）</h2>
+          <p class="muted small">下面是一个可以直接用的示例（请根据项目 README 或实际字段调整）。</p>
+          <pre><code>server:
+  bind: "0.0.0.0:8080"
+storage:
+  type: "file"
+  path: "./data/messages.db"
+
+rules:
+  - id: forward-webhook
+    match:
+      from: "sms"
+      contains: ["告警","ALERT"]
+    action:
+      type: "http"
+      url: "https://example.com/webhook"
+      method: "POST"
+      headers:
+        - "Content-Type: application/json"
+      body_template: '{"from":"{{from}}","text":"{{text}}","time":"{{time}}"}'
+  - id: mqtt-out
+    match:
+      contains: ["温度","湿度"]
+    action:
+      type: "mqtt"
+      broker: "tcp://mqtt-broker.local:1883"
+      topic: "sms/devices"
+</code></pre>
+          <p class="muted small">（上述示例仅为模板，实际字段以项目代码/README 为准）</p>
+        </section>
+
+        <section style="margin-top:16px">
+          <h2>部署（建议）</h2>
+          <h3>Docker（推荐用于快速试验）</h3>
+          <pre><code>docker build -t lanbing1989/sms-forwarder .
+docker run -d --restart=always -p 8080:8080 \
+  -v /opt/sms-forwarder/config.yml:/app/config.yml \
+  -v /var/lib/sms-forwarder:/app/data \
+  --name sms-forwarder lanbing1989/sms-forwarder:latest
+</code></pre>
+
+          <h3 style="margin-top:8px">systemd（适用于常驻服务器）</h3>
+          <pre><code>[Unit]
+Description=短信转发助手
+After=network.target
+
+[Service]
+User=smsf
+ExecStart=/usr/local/bin/sms-forwarder -c /etc/sms-forwarder/config.yml
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+        </section>
+
+        <section style="margin-top:16px">
+          <h2>HTTP API / Webhook（示例）</h2>
+          <p class="muted small">项目通常会提供 REST API 与管理端点。下例为示意，请根据实际仓库接口替换：</p>
+          <pre><code>POST /api/v1/forward
+Content-Type: application/json
+{
+  "from": "+8613800xxxxxx",
+  "text": "测试短信",
+  "timestamp": "2025-01-01T12:00:00Z"
+}
+
+响应:
+200 OK
+{
+  "status": "queued",
+  "id": "msg-xxxx"
+}
+</code></pre>
+        </section>
+
+        <section style="margin-top:16px">
+          <h2>常见问题（FAQ）</h2>
+          <ul class="muted small">
+            <li><strong>如何查看日志？</strong>：Docker 环境使用 docker logs 或把日志文件挂载到宿主。</li>
+            <li><strong>消息丢失怎么办？</strong>：启用持久化存储并开启失败重试机制。</li>
+            <li><strong>如何添加新的转发类型？</strong>：按插件/适配器模式扩展 action，或提交 PR 提议。</li>
+          </ul>
+        </section>
+
+        <section style="margin-top:16px">
+          <h2>贡献 & 联系</h2>
+          <p class="muted small">欢迎 Issues、PR 与讨论。请按 CONTRIBUTING.md 中的流程提交代码或报告 Bug。</p>
+          <p class="muted small">仓库：<a href="https://github.com/lanbing1989/sms-forwarder" style="color:var(--accent)">https://github.com/lanbing1989/sms-forwarder</a></p>
+        </section>
+      </div>
+
+      <aside>
+        <div class="card" style="padding:12px">
+          <h3>项目速览</h3>
+          <p class="muted small">最新版本：<span class="pill">v0.0.0</span></p>
+          <p class="muted small">许可证：MIT</p>
+          <p style="margin-top:12px"><a class="button" href="https://github.com/lanbing1989/sms-forwarder">查看 Repo</a></p>
+        </div>
+
+        <div class="card" style="margin-top:12px;padding:12px">
+          <h3>文档</h3>
+          <ul class="muted small">
+            <li><a href="docs/USAGE.md" style="color:var(--accent)">使用说明</a></li>
+            <li><a href="docs/CONFIGURATION.md" style="color:var(--accent)">配置参考</a></li>
+            <li><a href="privacy.html" style="color:var(--accent)">隐私政策</a></li>
+            <li><a href="#常见问题（FAQ）" style="color:var(--accent)">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:12px;padding:12px">
+          <h3>替换项</h3>
+          <p class="muted small">请替换：logo、屏幕截图、真实配置字段与 API 说明、版本号以及许可信息。建议放入 docs/assets/ 目录管理图片。</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      隐私政策：<a href="privacy.html" style="color:var(--accent)">查看隐私政策</a> · 若需我把这些文件提交到仓库（创建分支或 PR），或生成一个 GitHub Actions 自动部署 workflow，请告诉我你希望推到哪个分支（例如 main 或 gh-pages）。
+    </footer>
+  </div>
+</body>
+</html>
