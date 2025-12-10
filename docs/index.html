@@ -324,14 +324,23 @@
 
         <!-- 下载引导区 -->
         <section class="px-4 py-12 text-center">
-            <h2 class="text-3xl font-bold gradient-text mb-4">立即开始使用</h2>
-            <p class="text-gray-600 mb-8">下载短信转发助手，让重要短信不再错过</p>
-            <button class="download-button text-white font-semibold py-4 px-8 rounded-full text-lg shadow-lg" data-testid="download-button" onclick="handleDownload()">
-                <span class="material-icons align-middle mr-2">android</span>
-                下载 Android 版本
-            </button>
-            <p class="text-sm text-gray-500 mt-4">支持 Android 6.0 及以上版本</p>
-        </section>
+    <h2 class="text-3xl font-bold gradient-text mb-4">立即开始使用</h2>
+    <p class="text-gray-600 mb-8">下载短信转发助手，让重要短信不再错过</p>
+
+    <!-- 推荐使用 <a>，保持按钮外观 -->
+    <a
+      href="https://github.com/lanbing1989/sms-forwarder/releases/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="download-button inline-flex items-center justify-center text-white font-semibold py-4 px-8 rounded-full text-lg shadow-lg"
+      data-testid="download-button"
+      aria-label="在新标签页打开 GitHub Releases 页面，下载 Android 版本">
+        <span class="material-icons align-middle mr-2" aria-hidden="true">android</span>
+        下载 Android 版本
+    </a>
+
+    <p class="text-sm text-gray-500 mt-4">支持 Android 8.0 及以上版本</p>
+</section>
 
         <!-- 页脚区域 -->
         <footer class="px-4 py-8 bg-white bg-opacity-30 border-t border-gray-200">
@@ -351,7 +360,7 @@
                     </a>
                 </div>
                 <div class="mt-6 text-sm text-gray-500">
-                    <p>© 2024 短信转发助手. 保留所有权利.</p>
+                    <p>© 2025 短信转发助手. 保留所有权利.</p>
                 </div>
             </div>
         </footer>

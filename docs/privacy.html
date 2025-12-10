@@ -149,40 +149,44 @@
                     </div>
 
                     <div class="policy-item p-4">
-                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
-                            <span class="material-icons text-green-500 mr-2">support</span>
-                            READ_PHONE_STATE（用于读取 SIM / subscription 信息）
-                        </h4>
-                        <p class="text-gray-600">用途：在用户选择 SMS 通道并需要指定发送 SIM 卡（多卡设备）时，用于读取卡信息并允许用户选择要用于发送的 subscriptionId（subId）。此权限为按需请求，仅在需显示/选择卡信息时请求；若未授权，应用仍可使用默认短信管理器发送（但无法列出/选择具体 SIM 卡）。</p>
-                    </div>
-					 <div class="policy-item p-4">
-                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
-                            <span class="material-icons text-green-500 mr-2">support</span>
-                           RECEIVE_BOOT_COMPLETED（开机自启）
-                        </h4>
-                        <p class="text-gray-600">用途：当用户在设置中启用“开机自启动”后，应用会在设备开机完成后启动前台服务以保持转发服务持续运行；若用户不启用或撤销此权限，应用不会自动在开机时启动。</p>
-                    </div>
-					 <div class="policy-item p-4">
-                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
-                            <span class="material-icons text-green-500 mr-2">support</span>
-                           POST_NOTIFICATIONS（通知权限）
-                        </h4>
-                        <p class="text-gray-600">用途：用于显示应用的前台服务常驻通知（前台服务要求），提示服务状态与快速操作（例如停止服务）。应用在启动服务前会检查并提示用户开启通知权限。</p>
-                    </div>
-					 <div class="policy-item p-4">
-                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
-                            <span class="material-icons text-green-500 mr-2">support</span>
-                            INTERNET（网络访问）
-                        </h4>
-                        <p class="text-gray-600">用途：用于将短信转发到用户配置的网络通道（Webhook 等）。仅在用户主动配置 Webhook 时用于网络请求；默认不上传任何数据至开发者服务器。</p>
-                    </div>
-					 <div class="policy-item p-4">
-                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
-                            <span class="material-icons text-green-500 mr-2">support</span>
-                            FOREGROUND_SERVICE / FOREGROUND_SERVICE_REMOTE_MESSAGING（前台服务类型声明）
-                        </h4>
-                        <p class="text-gray-600">用途：支持启动前台服务以提高长期运行稳定性并满足不同 Android 版本的前台服务类型要求。</p>
-                    </div>
+    <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+        <span class="material-icons icon icon-sm text-green-500 mr-2" aria-hidden="true" role="img">sim_card</span>
+        READ_PHONE_STATE（用于读取 SIM / subscription 信息）
+    </h4>
+    <p class="text-gray-600">用途：在用户选择 SMS 通道并需要指定发送 SIM 卡（多卡设备）时，用于读取卡信息并允许用户选择要用于发送的 subscriptionId（subId）。此权限为按需请求，仅在需显示/选择卡信息时请求；若未授权，应用仍可使用默认短信管理器发送（但无法列出/选择具体 SIM 卡）。</p>
+</div>
+
+<div class="policy-item p-4">
+    <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+        <span class="material-icons icon icon-sm text-green-500 mr-2" aria-hidden="true" role="img">restart_alt</span>
+        RECEIVE_BOOT_COMPLETED（开机自启）
+    </h4>
+    <p class="text-gray-600">用途：当用户在设置中启用“开机自启动”后，应用会在设备开机完成后启动前台服务以保持转发服务持续运行；若用户不启用或撤销此权限，应用不会自动在开机时启动。</p>
+</div>
+
+<div class="policy-item p-4">
+    <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+        <span class="material-icons icon icon-sm text-green-500 mr-2" aria-hidden="true" role="img">notifications</span>
+        POST_NOTIFICATIONS（通知权限）
+    </h4>
+    <p class="text-gray-600">用途：用于显示应用的前台服务常驻通知（前台服务要求），提示服务状态与快速操作（例如停止服务）。应用在启动服务前会检查并提示用户开启通知权限。</p>
+</div>
+
+<div class="policy-item p-4">
+    <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+        <span class="material-icons icon icon-sm text-green-500 mr-2" aria-hidden="true" role="img">public</span>
+        INTERNET（网络访问）
+    </h4>
+    <p class="text-gray-600">用途：用于将短信转发到用户配置的网络通道（Webhook 等）。仅在用户主动配置 Webhook 时用于网络请求；默认不上传任何数据至开发者服务器。</p>
+</div>
+
+<div class="policy-item p-4">
+    <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+        <span class="material-icons icon icon-sm text-green-500 mr-2" aria-hidden="true" role="img">notifications_active</span>
+        FOREGROUND_SERVICE / FOREGROUND_SERVICE_REMOTE_MESSAGING（前台服务类型声明）
+    </h4>
+    <p class="text-gray-600">用途：支持启动前台服务以提高长期运行稳定性并满足不同 Android 版本的前台服务类型要求。</p>
+</div>
                 </div>
             </section>
 
