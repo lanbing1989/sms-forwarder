@@ -7,14 +7,11 @@ on:
   workflow_dispatch:   # 支持手动触发
 
 permissions:
-  contents: write      # 允许创建 release / 上传资产
+  contents: write      # 用于创建 release 和上传资产
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
-    env:
-      GRADLE_USER_HOME: /home/runner/.gradle
-      KEYSTORE_FILE: ${{ github.workspace }}/keystore.jks
 
     steps:
       - name: Checkout
@@ -23,20 +20,18 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
           java-version: '17'
+          distribution: 'temurin'
 
-      - name: Cache Gradle
-        uses: actions/cache@v4
+      - name: Set up Gradle 8.4
+        uses: gradle/gradle-build-action@v2
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          gradle-version: '8.4'
 
-      - name: Decode keystore (from secret)
+      - name: Show Gradle version
+        run: gradle --version
+
+      - name: Decode keystore (from secret) if provided
         shell: bash
         run: |
           if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
@@ -52,12 +47,14 @@ jobs:
 
       - name: Build release (assembleRelease)
         env:
+          # 把 secrets 注入为 environment，app/build.gradle.kts 会读取这些 env / project property
+          KEYSTORE_FILE: ${{ github.workspace }}/keystore.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          KEYSTORE_FILE: ${{ github.workspace }}/keystore.jks
         run: |
-          ./gradlew clean assembleRelease --no-daemon
+          # 使用 system gradle（与 debug workflow 保持一致）
+          gradle clean assembleRelease --no-daemon
 
       - name: Find artifact
         id: find_artifact
@@ -88,7 +85,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifact to Release
-        # 修正：使用存在的版本 v1（v2 不存在）
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
