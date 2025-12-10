@@ -16,10 +16,36 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // ---------- 新增：从环境变量或 gradle properties 加载签名信息 ----------
+    // 优先级：ENV > project property > 本地 my-release-key.jks（便于本地测试）
+    signingConfigs {
+        create("release") {
+            val keystoreFileEnv = System.getenv("KEYSTORE_FILE")
+            val keystoreFileProp = project.findProperty("KEYSTORE_FILE")?.toString()
+            val keystoreFilePath = keystoreFileEnv ?: keystoreFileProp
+
+            if (keystoreFilePath != null) {
+                storeFile = file(keystoreFilePath)
+            } else {
+                val localKeystore = rootProject.file("my-release-key.jks")
+                if (localKeystore.exists()) {
+                    storeFile = localKeystore
+                }
+            }
+
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: project.findProperty("KEYSTORE_PASSWORD")?.toString()
+            keyAlias = System.getenv("KEY_ALIAS") ?: project.findProperty("KEY_ALIAS")?.toString()
+            keyPassword = System.getenv("KEY_PASSWORD") ?: project.findProperty("KEY_PASSWORD")?.toString()
+        }
+    }
+    // ----------------------------------------------------------------------
+
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // 将 release buildType 关联到上面创建的 signingConfig
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
