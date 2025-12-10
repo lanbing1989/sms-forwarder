@@ -8,7 +8,7 @@
 
 短信转发助手1.1版本（多关键词、单通道） [https://github.com/lanbing1989/sms-forwarder/releases/tag/1.1](https://github.com/lanbing1989/sms-forwarder/releases/tag/1.1)
 
-短信转发助手2.0版本（多关键词、多通道） [https://github.com/lanbing1989/sms-forwarder/releases/tag/2.0](https://github.com/lanbing1989/sms-forwarder/releases/tag/v2.0.0)
+短信转发助手2.0版本（多关键词、多通道） [https://github.com/lanbing1989/sms-forwarder/releases/tag/v2.0.1](https://github.com/lanbing1989/sms-forwarder/releases/tag/v2.0.1)
 
 ---
 
