@@ -5,8 +5,9 @@
 仓库：https://github.com/lanbing1989/sms-forwarder
 
 一般用户请直接下载构建好的 APK 文件：
-1.版本与复现步骤。
+
 短信转发助手1.1版本（多关键词、单通道） https://github.com/lanbing1989/sms-forwarder/releases/tag/1.1
+
 短信转发助手2.0版本（多关键词、多通道） https://github.com/lanbing1989/sms-forwarder/releases/tag/2.0
 
 ---
