@@ -61,7 +61,8 @@ class SmsReceiver : BroadcastReceiver() {
             sender = sms.displayOriginatingAddress ?: sender
             sb.append(sms.displayMessageBody)
         }
-        val fullMessage = sb.toString()
+        // 归一化消息内容：去掉 CR，折叠连续空行，去首尾空白
+        val fullMessage = normalizeContent(sb.toString())
 
         // 收集所有匹配项（允许重复）
         val matched = mutableListOf<Pair<Channel, KeywordConfig>>()
@@ -88,6 +89,7 @@ class SmsReceiver : BroadcastReceiver() {
                             when (ch.type) {
                                 ChannelType.SMS -> {
                                     try {
+                                        // 使用归一化后的内容发送 SMS
                                         sendSms(context, ch.target, fullMessage, ch.simSubscriptionId)
                                         LogStore.append(context, "短信转发成功 → ${ch.target} (规则: ${cfg.keyword})")
                                     } catch (e: Exception) {
@@ -108,6 +110,7 @@ class SmsReceiver : BroadcastReceiver() {
                                                 try { Thread.sleep(backoff) } catch (_: InterruptedException) { }
                                             }
                                             try {
+                                                // 传给 webhook 的内容使用归一化后的 fullMessage，并用单个换行分隔发送者与正文（避免产生空白行）
                                                 success = sendToWebhook(ch.target, sender, fullMessage, ch.type)
                                             } catch (e: Exception) {
                                                 Log.e(TAG, "send attempt ${attempt+1} failed to ${ch.target}", e)
@@ -146,11 +149,20 @@ class SmsReceiver : BroadcastReceiver() {
         }
     }
 
+    // 归一化：删除 CR，折叠连续空行为单个换行，trim 首尾空白。
+    private fun normalizeContent(s: String): String {
+        return s.replace("\r", "")
+            .replace(Regex("\n{2,}"), "\n")
+            .trim()
+    }
+
     private fun sendToWebhook(webhookUrl: String, sender: String, content: String, type: ChannelType): Boolean {
         val json = JSONObject()
         json.put("msgtype", "text")
         val text = JSONObject()
-        text.put("content", "来自: $sender\n\n$content")
+        // 使用单个换行连接发送者与正文，并对正文再做一次归一化以防外部传入未处理的情况
+        val normalized = normalizeContent(content)
+        text.put("content", "来自: $sender\n${normalized}")
         json.put("text", text)
 
         val body = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
